@@ -17,8 +17,10 @@ class ProductCellTableViewCell: UITableViewCell {
     @IBOutlet weak var productPrice: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
+        productView.layer.borderWidth = 1
+        productView.layer.borderColor = UIColor.black.cgColor
         productView.layer.cornerRadius = 20
-        productView.layer.masksToBounds = false
+        productView.layer.masksToBounds = true
         productView.layer.shadowOpacity = 0.30
         productView.layer.shadowRadius = 4.0
         

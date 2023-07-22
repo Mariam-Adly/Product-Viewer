@@ -22,6 +22,11 @@ class NetworkServices {
                    print("Empty response")
                    return
                }
+            guard let error = error else {
+                // Handle empty response data
+                print("Empty error")
+                return
+            }
             do{
                 let result = try JSONDecoder().decode([Result].self, from: data)
                 completionHandler(result)
