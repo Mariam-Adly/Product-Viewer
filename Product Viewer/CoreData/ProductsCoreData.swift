@@ -37,8 +37,8 @@ class ProductsCoreData{
         
     }
     
-    func fetchProducts()->[Result]?{
-        var productArr = [Result]()
+    func fetchProducts()->[Product]?{
+        var productArr = [Product]()
 
         let fetchReq = NSFetchRequest<NSManagedObject>(entityName: "Item")
         do{
@@ -48,7 +48,7 @@ class ProductsCoreData{
                
                 let product = Product(name: product.value(forKey: "name") as? String,description: product.value(forKey: "description") as? String,price: product.value(forKey: "price") as? String)
                 let result = Result(product: product)
-                productArr.append(result)
+                productArr.append(product)
 
             }
           }catch let error as NSError{

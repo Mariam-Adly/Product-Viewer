@@ -15,7 +15,7 @@ class ViewController: UIViewController , UITableViewDelegate,UITableViewDataSour
     @IBOutlet weak var productsTV: UITableView!
     var productVM : ProductsViewModel?
     var productArr : [Result]?
-   
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         productsTV.delegate = self
@@ -28,26 +28,31 @@ class ViewController: UIViewController , UITableViewDelegate,UITableViewDataSour
             productVM?.getProducts()
         }else{
             productVM?.getProductsFromeCoreData()
+           
         }
+        productVM?.saveToCoreData(product: productArr ?? [Result()])
         productVM?.bindResultToProductsTableViewController = {
             DispatchQueue.main.async {
                 self.productArr = self.productVM?.productsResult
                 self.productsTV.reloadData()
             }
         }
-        productVM?.saveToCoreData(product: productArr ?? [Result()])
 
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
         
-//        productVM?.getProductsFromeCoreData()
-//        print("jessy\(productVM?.getProductsFromeCoreData())")
-//        DispatchQueue.main.async {
-//            self.productArr = self.productVM?.productsResult
-//            self.productsTV.reloadData()
-//        }
+        if CheckNetwork.isConnectedToInternet(){
+            productVM?.getProducts()
+        }else{
+            productVM?.getProductsFromeCoreData()
+           
+        }
+        DispatchQueue.main.async {
+            self.productArr = self.productVM?.productsResult
+            self.productsTV.reloadData()
+        }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

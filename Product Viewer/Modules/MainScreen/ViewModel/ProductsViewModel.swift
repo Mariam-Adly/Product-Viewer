@@ -8,6 +8,7 @@
 import Foundation
 class ProductsViewModel{
     var bindResultToProductsTableViewController : (()->()) = {}
+    var products : [Product]?
     var productsResult : [Result]?{
         didSet{
             bindResultToProductsTableViewController()
@@ -22,13 +23,11 @@ class ProductsViewModel{
     }
     
     func saveToCoreData(product : [Result]){
-        ProductsCoreData.coreData.insertProduct(ProductItem: productsResult ?? [Result()])
-        print(productsResult)
+        ProductsCoreData.coreData.insertProduct(ProductItem: product)
     }
     
     func getProductsFromeCoreData(){
-        self.productsResult = ProductsCoreData.coreData.fetchProducts()
-        print("jessy\(productsResult?[0].product?.name)")
+        self.products = ProductsCoreData.coreData.fetchProducts()
     }
     
     
