@@ -9,7 +9,7 @@ import UIKit
 import SDWebImage
 import Alamofire
 
-class ViewController: UIViewController , UITableViewDelegate,UITableViewDataSource{
+class ProductsViewController : UIViewController , UITableViewDelegate,UITableViewDataSource{
 
 
     @IBOutlet weak var productsTV: UITableView!
@@ -92,4 +92,5 @@ class ViewController: UIViewController , UITableViewDelegate,UITableViewDataSour
         return 20
     }
 }
+
 
