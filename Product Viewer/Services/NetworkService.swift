@@ -6,37 +6,31 @@
 //
 
 import Foundation
+import Alamofire
 class NetworkServices {
     
     static func getProducts( completionHandler: @escaping ([Result]?) -> Void ){
         let url = URL(string: "http://www.nweave.com/wp-content/uploads/2012/09/featured.txt")
-        guard let newUrl = url else {
-            return
-        }
-        let request = URLRequest(url: newUrl
-        )
-        let session = URLSession(configuration: .default)
-        let task = session.dataTask(with: request){ data,response , error in
-               guard let data = data else {
-                   // Handle empty response data
-                   print("Empty response")
-                   return
-               }
-            guard let error = error else {
-                // Handle empty response data
-                print("Empty response")
-                return
-            }
-            do{
-                let result = try JSONDecoder().decode([Result].self, from: data)
-                completionHandler(result)
-            }catch let error{
-                print(error.localizedDescription)
-                completionHandler(nil)
-            }
-            
-        }
-        task.resume()
+                guard let newUrl = url else {
+                    return
+                }
+                AF.request(newUrl,method: .get)
+                    .validate().response { resp in
+                        switch resp.result{
+                        case .success(let data):
+                            do{
+                                if let data = data{
+                                    let jsonData =  try JSONDecoder().decode([Result].self, from: data)
+                                        completionHandler(jsonData)
+                                }
+                            }catch{
+                                print(error.localizedDescription)
+                            }
+                        case .failure(let error):
+                            print(error.localizedDescription)
+                            completionHandler(nil)
+                        }
+                    }
         
     }
 }

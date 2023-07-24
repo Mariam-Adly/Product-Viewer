@@ -21,13 +21,13 @@ class ProductsCoreData{
         entity = NSEntityDescription.entity(forEntityName: "Item", in: context!)
     }
     
-    func insertProduct(ProductItem : [Result]){
+    func insertProduct(productItem : [Result]){
         
         let product = NSManagedObject(entity: entity!, insertInto: context)
     
-        product.setValue(ProductItem[0].product?.name, forKey: "name")
-        product.setValue(ProductItem[0].product?.description, forKey: "desc")
-        product.setValue(ProductItem[0].product?.price, forKey: "price")
+        product.setValue(productItem[0].product?.name, forKey: "name")
+        product.setValue(productItem[0].product?.description, forKey: "desc")
+        product.setValue(productItem[0].product?.price, forKey: "price")
         //product.setValue(ProductItem[0].product?.imageURL, forKey: "image")
         do{
             try context?.save()
@@ -37,8 +37,8 @@ class ProductsCoreData{
         
     }
     
-    func fetchProducts()->[Product]?{
-        var productArr = [Product]()
+    func fetchProducts()->[Result]?{
+        var productArr = [Result]()
 
         let fetchReq = NSFetchRequest<NSManagedObject>(entityName: "Item")
         do{
@@ -47,8 +47,8 @@ class ProductsCoreData{
             for product in products!{
                
                 let product = Product(name: product.value(forKey: "name") as? String,description: product.value(forKey: "description") as? String,price: product.value(forKey: "price") as? String)
-                let result = Result(product: product)
-                productArr.append(product)
+                let result = Result(product: product,productMerchants: [ProductMerchantElement()])
+                productArr.append(result)
 
             }
           }catch let error as NSError{
