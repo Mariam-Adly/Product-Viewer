@@ -124,6 +124,8 @@
 			children = (
 				447F642F2A6ABACE00F64F29 /* DetailsScreen */,
 				447F642C2A6ABA4D00F64F29 /* MainScreen */,
+				44B0A31B2A68416C00BC1FAF /* Main.storyboard */,
+				44B0A3232A68416E00BC1FAF /* LaunchScreen.storyboard */,
 			);
 			path = Modules;
 			sourceTree = "<group>";
@@ -237,8 +239,6 @@
 				447F642B2A6ABA4200F64F29 /* Modules */,
 				44B0A3172A68416C00BC1FAF /* SceneDelegate.swift */,
 				44B0A3152A68416C00BC1FAF /* AppDelegate.swift */,
-				44B0A31B2A68416C00BC1FAF /* Main.storyboard */,
-				44B0A3232A68416E00BC1FAF /* LaunchScreen.storyboard */,
 				44B0A3212A68416E00BC1FAF /* Assets.xcassets */,
 				44B0A3262A68416E00BC1FAF /* Info.plist */,
 			);
@@ -717,6 +717,7 @@
 				DEVELOPMENT_TEAM = 8H2679RM7P;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Product Viewer/Info.plist";
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -747,6 +748,7 @@
 				DEVELOPMENT_TEAM = 8H2679RM7P;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Product Viewer/Info.plist";
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;

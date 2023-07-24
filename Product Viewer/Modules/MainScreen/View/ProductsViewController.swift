@@ -9,13 +9,12 @@ import UIKit
 import SDWebImage
 import Alamofire
 
-class ProductsViewController : UIViewController , UITableViewDelegate,UITableViewDataSource{
-
-
+class ProductsViewController : UIViewController {
+    
+    
     @IBOutlet weak var productsTV: UITableView!
     var productVM : ProductsViewModel?
-    var productArr : [Result]?
-    
+    var networkIndecator : UIActivityIndicatorView!
     override func viewDidLoad() {
         super.viewDidLoad()
         productsTV.delegate = self
@@ -23,74 +22,71 @@ class ProductsViewController : UIViewController , UITableViewDelegate,UITableVie
         
         productVM = ProductsViewModel()
         
+        networkIndecator = UIActivityIndicatorView(style: .large)
+        networkIndecator.color = UIColor.black
+        networkIndecator.center = view.center
+        networkIndecator.startAnimating()
+        view.addSubview(networkIndecator)
+        
         productsTV.register(UINib(nibName: "ProductCellTableViewCell", bundle: nil), forCellReuseIdentifier: "productCell")
+    
+        
         if CheckNetwork.isConnectedToInternet(){
             productVM?.getProducts()
         }else{
             productVM?.getProductsFromeCoreData()
-           
-        }
-        productVM?.saveToCoreData(product: productArr ?? [Result()])
+    }
         productVM?.bindResultToProductsTableViewController = {
             DispatchQueue.main.async {
-                self.productArr = self.productVM?.productsResult
                 self.productsTV.reloadData()
+                self.networkIndecator.stopAnimating()
             }
         }
-
         
-    }
+}
     
+
     override func viewWillAppear(_ animated: Bool) {
-        
         if CheckNetwork.isConnectedToInternet(){
             productVM?.getProducts()
         }else{
             productVM?.getProductsFromeCoreData()
-           
         }
-        DispatchQueue.main.async {
-            self.productArr = self.productVM?.productsResult
-            self.productsTV.reloadData()
+        productVM?.bindResultToProductsTableViewController = {
+            DispatchQueue.main.async {
+                self.productsTV.reloadData()
+                self.networkIndecator.stopAnimating()
+            }
         }
     }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            return productArr?.count ?? 0
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "productCell", for: indexPath) as! ProductCellTableViewCell
-            cell.productImg.sd_setImage(with: URL(string: productArr?[indexPath.row].product?.imageURL ?? ""),placeholderImage: UIImage(named: "product"))
-            
-            cell.productTiltle.text = productArr?[indexPath.row].product?.name
-            cell.productDesc.text = productArr?[indexPath.row].product?.description
-            cell.productPrice.text = productArr?[indexPath.row].product?.price
-        return cell
-    }
-    
+}
+
+extension ProductsViewController : UITableViewDelegate{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
         let productDetailsVC = self.storyboard?.instantiateViewController(withIdentifier: "ProductDetailsVC") as! ProductDetailsViewController
         
-        let controller = ProductDetailsViewModel( product : productArr![indexPath.row].product)
+        let controller = ProductDetailsViewModel( product : productVM?.getProductsAtIndex(index: indexPath.row))
         productDetailsVC.productDetailsViewModel = controller
         self.navigationController?.pushViewController(productDetailsVC, animated: true)
 
     }
-    
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        // 1
-        let headerView = UIView()
-        // 2
-        headerView.backgroundColor = view.backgroundColor
-        // 3
-        return headerView
-    }
-    
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 20
-    }
 }
 
-
+extension ProductsViewController : UITableViewDataSource{
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return productVM?.getProductsCount() ?? 0
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "productCell", for: indexPath) as! ProductCellTableViewCell
+        let data = productVM?.getProductsAtIndex(index: indexPath.row)
+        self.productVM?.saveToCoreData(product: self.productVM?.productsResult ?? [Result()])
+            cell.productImg.sd_setImage(with: URL(string: data?.imageURL ?? ""),placeholderImage: UIImage(named: "product"))
+        cell.productTiltle.text = data?.name
+            cell.productDesc.text = data?.description
+            cell.productPrice.text = data?.price
+        return cell
+    }
+    
+}
